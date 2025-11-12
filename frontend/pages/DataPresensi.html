@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Presensi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* === RESET & DASAR === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #EDEDED;
+            min-height: 100vh;
+        }
+
+        /* === HEADER === */
+        header {
+            width: 100%;
+            background: #EDEDED;
+            display: flex;
+            /* Ini kunci utamanya: memisahkan 2 grup (logo & header-right-group) */
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 50px;
+            /* Padding ini memberi jarak dari tepi layar */
+            position: relative;
+            top: 0;
+            z-index: 100;
+        }
+
+        /* === LOGO (GRUP KIRI) === */
+        .logo {
+            font-size: 2rem;
+            font-style: italic;
+            font-weight: 200;
+            color: #333;
+            user-select: none;
+        }
+
+        /* === GRUP KANAN (BARU) === */
+        /* Pembungkus baru untuk semua item di kanan */
+        .header-right-group {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            /* Jarak antara navigasi tengah dan tombol kanan */
+        }
+
+        /* === MENU NAVIGASI (di dalam Grup Kanan) === */
+        .nav-container {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: 40px;
+            padding: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-item {
+            padding: 10px 26px;
+            margin: 0 4px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .nav-item:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-item.active {
+            color: #ffffff;
+            font-weight: 500;
+            background: #B5B5B5;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        /* === TOMBOL KANAN (di dalam Grup Kanan) === */
+        .right-menu {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .menu-btn-wrapper {
+            position: relative;
+        }
+
+        .menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border-radius: 40px;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            color: #333;
+            user-select: none;
+        }
+
+        .menu-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        .menu-btn svg {
+            width: 22px;
+            height: 22px;
+            stroke: #333;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .menu-btn.admin svg {
+            stroke: none;
+        }
+
+        /* === DROPDOWN MENU === */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            z-index: 110;
+            width: max-content;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            color: #333;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Main */
+    </style>
+
+</head>
+<body class="bg-[#EDEDED] min-h-screen">
+     <header>
+        <div class="logo">WisudaScan</div>
+
+        <div class="header-right-group">
+
+            <div class="nav-container">
+                <div class="nav-item" data-index="0">Dashboard</div>
+                <div class="nav-item active" data-index="1">Data Presensi</div>
+                <div class="nav-item" data-index="2">Kamera</div>
+            </div>
+
+            <div class="right-menu">
+
+                <div class="menu-btn-wrapper">
+                    <div class="menu-btn" id="settings-btn" title="Pengaturan">
+                        <svg viewBox="0 0 24 24">
+
+                            <path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7z" />
+
+                            <path
+                                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 8.6 15a1.65 1.65 0 0 0-1.82-.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 15.4 9a1.65 1.65 0 0 0 1.82.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 15z" />
+
+                        </svg>
+                        <span>Pengaturan</span>
+                    </div>
+                    <div class="dropdown-menu" id="settings-dropdown">
+                        <a href="#" class="dropdown-item">Dark Mode</a>
+                        <a href="#" class="dropdown-item">Ubah Bahasa</a>
+                    </div>
+                </div>
+
+                <div class="menu-btn-wrapper">
+                    <div class="menu-btn admin" id="admin-btn" title="Administrator">
+                        <svg viewBox="0 0 24 24" width="22" height="22">
+                            <circle cx="12" cy="12" r="10" fill="#ff4d4d" />
+                            <circle cx="12" cy="9.5" r="3.5" fill="white" />
+                            <path d="M6 20.5a6 6 0 0 1 12 0v-1.5a6 6 0 0 0 -12 0v1.5z" fill="white" />
+                        </svg>
+                        <span>Administrator</span>
+                    </div>
+                    <div class="dropdown-menu" id="admin-dropdown">
+                        <a href="#" class="dropdown-item">Logout</a>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </header>
+
+    <main class="px-12 py-8">
+        <h1 class="text-3xl font-medium text-[#000000] mb-6">Data Absensi</h1>
+
+        <div class="bg-white rounded-tl-3xl rounded-tr-3xl shadow-md mb-0 max-w-2xl">
+            <div class="flex items-center p-2">
+                <img class="w-5 h-5 ml-4 mr-2" alt="Search Bar Icon" src="./assets/Search.png">
+                <input type="text" id="search-bar" placeholder="Pencarian" class="w-full border-none outline-none focus:ring-0 placeholder-[#A9A9A9] py-2.5 rounded-full">
+            </div>
+        </div>
+
+        <div class="bg-white rounded-tr-3xl shadow-lg overflow-h">
+            <div class="grid grid-cols-6 gap-4 p-5 rounded-lg bg-white border-b border-gray-200 text-sm font-light text-black">
+                
+                <div class="flex items-center gap-1 cursor-pointer hover:text-gray-500">
+                    No
+                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                </div>
+
+                <div class="flex items-center gap-1 cursor-pointer hover:text-gray-500">
+                    Nama
+                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                </div>
+
+                <div class="flex items-center gap-1 cursor-pointer hover:text-gray-500">
+                    Kelas
+                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                </div>
+                
+                <div class="flex items-center gap-1 cursor-pointer hover:text-gray-500">
+                    No.Absen
+                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                </div>
+
+                <div class="flex items-center gap-1 cursor-pointer hover:text-gray-500">
+                    Waktu Presensi
+                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                </div>
+
+                <div class="flex items-center gap-1 cursor-pointer hover:text-gray-500">
+                    Status
+                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                </div>
+            </div>
+        </div>
+
+        <div id="table-body" class="max-h-[60vh] overflow-y-auto">
+            
+        </div>
+
+    </main>
+
+    <script>
+        // === Skrip untuk Navigasi Tengah (Ganti Kelas Active) ===
+        const navItems = document.querySelectorAll('.nav-item');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelector('.nav-item.active').classList.remove('active');
+                item.classList.add('active');
+            });
+        });
+
+        // === Skrip untuk Dropdown Menu Kanan ===
+        const settingsBtn = document.getElementById('settings-btn');
+        const adminBtn = document.getElementById('admin-btn');
+        const settingsDropdown = document.getElementById('settings-dropdown');
+        const adminDropdown = document.getElementById('admin-dropdown');
+
+        settingsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            settingsDropdown.classList.toggle('show');
+            adminDropdown.classList.remove('show');
+        });
+
+        adminBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            adminDropdown.classList.toggle('show');
+            settingsDropdown.classList.remove('show');
+        });
+
+        window.addEventListener('click', (e) => {
+            if (!settingsBtn.contains(e.target)) {
+                settingsDropdown.classList.remove('show');
+            }
+            if (!adminBtn.contains(e.target)) {
+                adminDropdown.classList.remove('show');
+            }
+        });
+
+        // Saya buat 25 data untuk menunjukkan fungsi scrolling
+        const mockData = [
+            // Data dari UI
+            { no: 1, nama: "Ravelin Lutfhan Syach Putra", kelas: "12-A", noAbsen: 13, waktu: "12:10", status: "Hadir" },
+            { no: 2, nama: "Muhammad Ghifari Al Rasyid", kelas: "12-A", noAbsen: 24, waktu: "12:10", status: "Hadir" },
+            { no: 3, nama: "Rayyan Dirga Nahendra", kelas: "12-A", noAbsen: 13, waktu: "12:10", status: "Hadir" },
+            { no: 4, nama: "Rangga Madhipa Sutra Jiwa Cosedaga", kelas: "12-A", noAbsen: 13, waktu: "12:10", status: "Hadir" },
+            { no: 5, nama: "Wiranu Adjie Setiawan", kelas: "12-A", noAbsen: 13, waktu: "12:10", status: "Hadir" },
+            // Data tambahan
+            { no: 6, nama: "Alya Putri", kelas: "12-B", noAbsen: 2, waktu: "12:11", status: "Hadir" },
+            { no: 7, nama: "Bima Sakti", kelas: "12-C", noAbsen: 5, waktu: "12:12", status: "Absen" },
+            { no: 8, nama: "Citra Lestari", kelas: "12-A", noAbsen: 8, waktu: "12:12", status: "Hadir" },
+            { no: 9, nama: "Dion Anggara", kelas: "12-B", noAbsen: 10, waktu: "12:13", status: "Hadir" },
+            { no: 10, nama: "Elang Perkasa", kelas: "12-C", noAbsen: 11, waktu: "12:13", status: "Hadir" },
+            { no: 11, nama: "Fajar Nugroho", kelas: "12-A", noAbsen: 14, waktu: "12:14", status: "Hadir" },
+            { no: 12, nama: "Gita Permata", kelas: "12-B", noAbsen: 16, waktu: "12:14", status: "Hadir" },
+            { no: 13, nama: "Hendra Wijaya", kelas: "12-C", noAbsen: 18, waktu: "12:15", status: "Hadir" },
+            { no: 14, nama: "Indah Cahyani", kelas: "12-A", noAbsen: 20, waktu: "12:15", status: "Hadir" },
+            { no: 15, nama: "Joko Susilo", kelas: "12-B", noAbsen: 22, waktu: "12:16", status: "Absen" },
+            { no: 16, nama: "Kania Dewi", kelas: "12-C", noAbsen: 23, waktu: "12:16", status: "Hadir" },
+            { no: 17, nama: "Lina Marlina", kelas: "12-A", noAbsen: 25, waktu: "12:17", status: "Hadir" },
+            { no: 18, nama: "Mega Mendung", kelas: "12-B", noAbsen: 27, waktu: "12:17", status: "Hadir" },
+            { no: 19, nama: "Nino Prasetyo", kelas: "12-C", noAbsen: 29, waktu: "12:18", status: "Hadir" },
+            { no: 20, nama: "Oscar Pranata", kelas: "12-A", noAbsen: 30, waktu: "12:18", status: "Hadir" },
+            { no: 21, nama: "Putra Pratama", kelas: "12-B", noAbsen: 31, waktu: "12:19", status: "Hadir" },
+            { no: 22, nama: "Qory Sandioriva", kelas: "12-C", noAbsen: 32, waktu: "12:19", status: "Hadir" },
+            { no: 23, nama: "Rian Hidayat", kelas: "12-A", noAbsen: 33, waktu: "12:20", status: "Hadir" },
+            { no: 24, nama: "Sinta Dewi", kelas: "12-B", noAbsen: 34, waktu: "12:20", status: "Hadir" },
+            { no: 25, nama: "Tora Sudiro", kelas: "12-C", noAbsen: 35, waktu: "12:21", status: "Hadir" },
+        ];
+
+        // Elemen DOM
+        const tableBody = document.getElementById('table-body');
+        const searchBar = document.getElementById('search-bar');
+
+        // Fungsi untuk mendapatkan kelas styling status
+        function getStatusClasses(status) {
+            if (status === 'Hadir') {
+                // Sesuai UI 'Group 11.png'
+                return {
+                    bg: 'bg-green-200',
+                    text: 'text-green-800',
+                    dot: 'bg-green-600'
+                };
+            } else if (status === 'Absen') {
+                // Sesuai UI 'Group 12.png'
+                return {
+                    bg: 'bg-red-200',
+                    text: 'text-red-800',
+                    dot: 'bg-red-600'
+                };
+            }
+            // Status default
+            return {
+                bg: 'bg-gray-200',
+                text: 'text-gray-800',
+                dot: 'bg-gray-500'
+            };
+        }
+
+        // Fungsi untuk me-render data ke tabel
+        function renderTable(data) {
+            // Kosongkan tabel dulu
+            tableBody.innerHTML = '';
+
+            // Loop setiap data dan buat baris tabel
+            data.forEach((row, index) => {
+                const statusStyle = getStatusClasses(row.status);
+                
+                // Beri highlight kuning untuk baris pertama, sesuai UI
+                const rowBgClass = row.no === 1 ? 'bg-yellow-300' : 'bg-white';
+                // Beri border pemisah antar baris
+                const borderClass = index !== data.length - 1 ? 'border-b border-gray-100' : '';
+
+                const rowHtml = `
+                <div class="grid grid-cols-6 gap-4 p-5 items-center ${rowBgClass} ${borderClass} hover:bg-gray-50 transition-colors duration-150">
+                    <div class="text-gray-700 font-medium">${row.no}</div>
+                    <div class="text-gray-900 font-medium">${row.nama}</div>
+                    <div class="text-gray-700">${row.kelas}</div>
+                    <div class="text-gray-700">${row.noAbsen}</div>
+                    <div class="text-gray-700">${row.waktu}</div>
+                    <div>
+                        <span class="text-xs font-semibold rounded-full px-3 py-1.5 inline-flex items-center gap-1.5 ${statusStyle.bg} ${statusStyle.text}">
+                            <span class="w-2 h-2 rounded-full ${statusStyle.dot}"></span>
+                            ${row.status}
+                        </span>
+                    </div>
+                </div>
+                `;
+                
+                tableBody.insertAdjacentHTML('beforeend', rowHtml);
+            });
+            
+            // Tampilkan pesan jika data tidak ditemukan
+             if (data.length === 0) {
+                tableBody.innerHTML = `<div class="p-5 text-center text-gray-500">Data tidak ditemukan.</div>`;
+            }
+        }
+
+        // Fungsi untuk filter/pencarian
+        searchBar.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            const filteredData = mockData.filter(row => {
+                return (
+                    row.nama.toLowerCase().includes(searchTerm) ||
+                    row.kelas.toLowerCase().includes(searchTerm) ||
+                    String(row.noAbsen).includes(searchTerm)
+                );
+            });
+            
+            // Render ulang tabel dengan data yang sudah difilter
+            renderTable(filteredData);
+        });
+
+        // Render tabel saat halaman pertama kali dimuat
+        renderTable(mockData);
+    </script>
+</body>
+</html>

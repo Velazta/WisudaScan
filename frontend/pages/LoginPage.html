@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-image: url('./assets/backgroundlogin.png');
+            /* Ganti dengan URL gambar background Anda */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* === CARD WRAPPER === */
+    .card-container {
+      display: flex;
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 24px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .card-container:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 35px rgba(0, 0, 0, 0.25);
+    }
+
+    /* === LEFT PANEL === */
+    .left-panel {
+      width: 477px;
+      height: 528px;
+      background-color: rgba(250, 250, 250, 0.8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      border-top-left-radius: 24px;
+      border-bottom-left-radius: 24px;
+      padding: 50px 40px;
+      position: relative;
+    }
+
+    /* Logo wrapper */
+    .icon-wrapper {
+      width: 80px;
+      height: 80px;
+      background-color: white;
+      border-radius: 28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .icon-wrapper img {
+      width: 60px;
+      height: 60px;
+    }
+
+    /* Input field */
+    .input-field {
+      width: 100%;
+      height: 64px;
+      background-color: #E5E7EB;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      margin-bottom: 18px;
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+    }
+
+    .input-field:hover {
+      box-shadow: 0 0 7px 0px rgba(0, 0, 0, 0.433);
+      transform: translateY(-2px);
+    }
+
+    .input-field input {
+      background: none;
+      border: none;
+      outline: none;
+      flex-grow: 1;
+      color: #434343;
+      font-size: 16px;
+      font-weight: 300;
+      padding-left: 10px;
+    }
+
+    .input-icon {
+      width: 22px;
+      height: 22px;
+      color: #434343;
+      opacity: 1;
+    }
+
+    /* Button */
+    .login-button {
+      width: 100%;
+      height: 64px;
+      background-color: #434343;
+      border-radius: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .login-button:hover {
+      background-color: #434343;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+      transform: translateY(-2px);
+    }
+
+    /* === RIGHT PANEL === */
+    .right-panel {
+      width: 477px;
+      height: 528px;
+      background-color: #FFD861;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-top-right-radius: 24px;
+      border-bottom-right-radius: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .illustration {
+      width: 400px;
+      height: auto;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card-container">
+    <!-- Left panel -->
+    <div class="left-panel">
+      <div class="icon-wrapper">
+        <img src="./assets/Enter.png" alt="Login Icon">
+      </div>
+
+      <h2 class="text-black text-3xl font-bold tracking-wider">Welcome Back!</h2>
+      <p class="text-gray-500 text-lg font-light tracking-wide mb-8">Login to system</p>
+
+      <div class="input-field">
+        <img class="input-icon" src="https://img.icons8.com/ios-glyphs/30/9CA3AF/new-post.png" alt="Email Icon">
+        <input type="email" placeholder="Enter your email">
+      </div>
+
+      <div class="input-field">
+        <img class="input-icon" src="https://img.icons8.com/ios-glyphs/30/9CA3AF/lock-2.png" alt="Password Icon">
+        <input type="password" placeholder="Enter your password">
+      </div>
+
+      <button class="login-button mt-2">Login</button>
+    </div>
+
+    <!-- Right panel -->
+    <div class="right-panel">
+      <img class="illustration" src="./assets/loginilustration.png" alt="Login Illustration">
+    </div>
+  </div>
+ 
+  <script>
+    // Smooth hover animation for the login card
+    const card = document.querySelector('.card-container');
+    card.addEventListener('mouseenter', () => {
+      card.style.transform = 'translateY(-5px)';
+      card.style.transition = 'transform 0.4s ease';
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'translateY(0)';
+    });
+  </script>
+</body>
+</html>
